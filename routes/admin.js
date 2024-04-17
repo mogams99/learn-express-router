@@ -9,6 +9,7 @@ router.use((req, res, next) => {
 
 // ? define admin routes
 router.get('/', (req, res) => {
+    res.cookie('token', '123456789abcd');
     res.send('admin index');
 });
 
