@@ -10,16 +10,9 @@ const url = `http://localhost:${port}`;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ? define our routes
-app.get('/theater', (req, res) => {
-    res.send('theater index');
-});
-app.get('/theater/create', (req, res) => {
-    res.send('theater create');
-});
-app.get('/theater/:id', (req, res) => {
-    res.send('theater show');
-});
+// ? import routes
+app.use('/theater', require('./routes/theater'));
+app.use('/movies', require('./routes/movies'));
 
 // ! connect to app
 app.listen(port, () => {
