@@ -17,7 +17,6 @@ app.use(session({
     secret: secret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
 }));
 
 // ! define single route
@@ -34,6 +33,16 @@ app.get('/page-count', (req, res) => {
     if (!req.session.count) req.session.count = 1;
     res.send(`count visit page: ${req.session.count}`);
 });
+app.get('/register', (req, res) => {
+    const { username = 'Anonim'} = req.query;
+    req.session.username = username;
+    res.redirect('/dashboard');
+});
+app.get('/dashboard', (req, res) => {
+    const username = req.session.username; // Menggunakan nilai default 'Anonim' jika username tidak tersedia di sesi
+    res.send(`Welcome buddy, ${username}`);
+});
+
 // ? import routes
 app.use('/admin', require('./routes/admin'));
 app.use('/theater', require('./routes/theater'));
