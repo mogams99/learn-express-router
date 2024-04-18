@@ -1,16 +1,24 @@
 // * import library package
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 // * define port and url
 const port = 3001;
+const secret = 'secret-key';
 const url = `http://localhost:${port}`;
 
 // ? define middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser('secret-key'));
+app.use(cookieParser(secret));
+app.use(session({
+    secret: secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 
 // ! define single route
 app.get('/sign-cookie', (req, res) => {
@@ -20,6 +28,11 @@ app.get('/sign-cookie', (req, res) => {
 app.get('/verify-cookie', (req, res) => {
     const cookies = req.signedCookies;
     res.send(cookies);
+});
+app.get('/page-count', (req, res) => {
+    if (req.session.count) req.session.count++;
+    if (!req.session.count) req.session.count = 1;
+    res.send(`count visit page: ${req.session.count}`);
 });
 // ? import routes
 app.use('/admin', require('./routes/admin'));
